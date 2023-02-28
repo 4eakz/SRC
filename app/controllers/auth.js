@@ -14,7 +14,7 @@ exports.signup = async (req, res) => {
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 
     if (existingUser) {
-      return res.status(409).json({ message: 'Пользователь с таким именем или почтой уже зарегистрирован' });
+      return res.status(409).json({ message: 'A user with this name or email is already registered' });
     }
 
     // Хешируем пароль
@@ -29,9 +29,9 @@ exports.signup = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ message: 'Пользователь успешно зарегистрирован' });
+    res.status(201).json({ message: 'A user is registered' });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка сервера' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -44,14 +44,14 @@ exports.login = async (req, res) => {
     const existingUser = await User.findOne({ username });
 
     if (!existingUser) {
-      return res.status(401).json({ message: 'Неверные имя пользователя или пароль' });
+      return res.status(401).json({ message: 'Incorrect user data' });
     }
 
     // Проверяем, верен ли пароль
     const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: 'Неверные имя пользователя или пароль' });
+      return res.status(401).json({ message: 'Incorrect user data' });
     }
 
     // Создаем токен для авторизации
@@ -59,6 +59,6 @@ exports.login = async (req, res) => {
 
     res.status(200).json({ token, userId: existingUser._id });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка сервера' });
+    res.status(500).json({ message: 'Server error' });
   }
 };

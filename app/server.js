@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const videoRouter = require('./routes/video');
+const userRouter = require('./routes/user');
+const commentRouter = require('./routes/comment');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,16 +22,16 @@ app.use(express.json());
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB');
 });
-// Use video routes
-app.use('/videos', videoRouter);
-
 // Handle MongoDB connection errors
 mongoose.connection.on('error', (error) => {
   console.error('MongoDB connection error:', error);
 });
 
+app.use('/video', videoRouter);
+app.use('/user', userRouter);
+app.use('/comment', commentRouter);
+
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
   console.log('http://localhost:3001')
 });
